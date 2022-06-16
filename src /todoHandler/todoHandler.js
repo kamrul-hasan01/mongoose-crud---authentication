@@ -5,22 +5,14 @@ const todoSchema = require("../schemas/todoSchema");
 const Todo = new mongoose.model("Todo", todoSchema);
 // get all todo
 router.get("/", async (req, res) => {
-  await Todo.find({}, (error, data) => {
-    console.log(error, data);
-    if (error) {
-      res.status(500).json({
-        error,
-      });
-    } else {
-      res.status(200).json({
-        result: data,
-        message: "Todo load successfully",
-      });
-    }
-  });
+  const result = await Todo.find();
+  res.status(200).json(result);
 });
 // get   todo by id
-router.get("/:id", async (req, res) => {});
+router.get("/:id", async (req, res) => {
+  const result = await Todo.find({ _id: req.params.id });
+  res.status(200).json(result);
+});
 // post todo
 router.post("/", async (req, res) => {
   const newTodo = new Todo(req.body);
@@ -75,6 +67,9 @@ router.put("/:id", async (req, res) => {
   );
 });
 //  delete todo
-router.delete("/:id", async (req, res) => {});
+router.delete("/:id", async (req, res) => {
+  const result = await Todo.deleteOne({ _id: req.params.id });
+  res.status(200).json(result);
+});
 
 module.exports = router;
